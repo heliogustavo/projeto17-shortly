@@ -6,3 +6,7 @@ export function createShortUrlDB(url, shortUrl, userId){
      [url, shortUrl, userId])
 
 } 
+
+export function getUrlByIdDB(id){
+    return db.query(`SELECT id, url, "shortUrl" FROM urls WHERE id=$1;`, [id])
+}
