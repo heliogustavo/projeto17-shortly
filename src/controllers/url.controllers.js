@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid'
-import { createShortUrlDB, getUrlByIdDB, getUrlByNameDB, incrementViewsDB } from '../repositories/url.repository.js'
+import { createShortUrlDB, deleteUrlDB, getUrlByIdDB, getUrlByNameDB, getUserIdDB, incrementViewsDB } from '../repositories/url.repository.js'
 const nanoid = customAlphabet('1234567890abcdef', 8)
 
 export async function shortenUrl(req, res) {
@@ -46,5 +46,18 @@ export async function openUrl(req, res) {
     }}
 
 export async function deleteUrl(req, res) {
-    res.send("deleteUrl")
-}
+    const {id} =req.params
+    const {userId}=res.locals
+
+    try {
+        const url = await getUserIdDB(id)
+        if(url.rowCount===0) return res.status(404).send({ message: "URL não existe!" })
+        if(url.rows[0].userId !== userId) return res.status(401).send({message: "Você não pode deletar URL's de outra pessa!"})
+
+        await deleteUrlDB(id)
+
+        res.sendStatus(204)
+
+    } catch (err) {
+        res.status(500).send(err.message) 
+    }}
