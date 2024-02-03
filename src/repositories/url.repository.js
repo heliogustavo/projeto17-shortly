@@ -10,3 +10,12 @@ export function createShortUrlDB(url, shortUrl, userId){
 export function getUrlByIdDB(id){
     return db.query(`SELECT id, url, "shortUrl" FROM urls WHERE id=$1;`, [id])
 }
+
+export function getUrlByNameDB(shortUrl){
+    return db.query(`SELECT url FROM urls WHERE "shortUrl"=$1;`, [shortUrl])
+
+}
+
+export function incrementViewsDB(shortUrl){
+    return db.query(`UPDATE urls SET "visitCount" = "visitCount" + 1 WHERE "shortUrl"=$1;`, [shortUrl])
+}
