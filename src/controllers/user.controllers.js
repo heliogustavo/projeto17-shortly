@@ -1,4 +1,4 @@
-import { getUrlsByUserDB, getUserByIdDB } from "../repositories/user.repository.js"
+import { getRankingDB, getUrlsByUserDB, getUserByIdDB } from "../repositories/user.repository.js"
 
 export async function getCurrentUser(req,res){
     const {userId} = res.locals
@@ -14,5 +14,12 @@ export async function getCurrentUser(req,res){
 }
 
 export async function getUserRanking(req,res){
-    res.send("getUserRanking")
+    try{
+        const {rows:ranking}= await getRankingDB()
+        res.send(ranking) 
+    }catch(err){
+        res.status(500).send(err.message)
+    }
+
+
 }
